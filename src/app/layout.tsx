@@ -30,14 +30,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 		<html
 			lang="en"
 			className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} h-full antialiased`}>
-			<body className="min-h-full flex flex-col">
+			<body className="relative min-h-full flex flex-col">
 				<ThemeProvider
 					attribute={"class"}
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange>
 					<Header />
-					<main className="container mx-auto">{children}</main>
+					<main className="h-full">{children}</main>
 				</ThemeProvider>
 			</body>
 		</html>
