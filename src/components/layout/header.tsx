@@ -6,7 +6,7 @@ import AuthenticationButtons from "./authentication-buttons";
 
 const Header = () => {
 	return (
-		<header className="fixed inset-0 h-14 mt-2 flex items-center justify-between container mx-auto px-4 py-2 border border-accent rounded backdrop-blur-lg text-primary-foreground">
+		<header className="fixed inset-0 h-14 z-50 mt-2 flex items-center justify-between container mx-auto px-4 py-2 border border-accent rounded backdrop-blur-lg text-primary-foreground">
 			<div className="block sm:hidden">
 				<SideNavBar />
 			</div>

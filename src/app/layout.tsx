@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans, Lora, IBM_Plex_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import { Separator } from "@/components/ui/separator";
 
 const fontSans = Plus_Jakarta_Sans({
 	subsets: ["latin"],
@@ -38,6 +40,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 					disableTransitionOnChange>
 					<Header />
 					<main>{children}</main>
+					<Separator />
+					<Footer />
 				</ThemeProvider>
 			</body>
 		</html>

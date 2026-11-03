@@ -32,7 +32,7 @@ const NavBar = ({ className = "" }: { className?: string }) => {
 							<NavigationMenuLink
 								className={cn(
 									active ? "text-primary font-semibold" : "text-muted-foreground",
-									"hover:text-primary hover:bg-transparent rounded-none text-lg sm:text-sm",
+									"hover:text-primary hover:bg-transparent rounded-none text-lg sm:text-sm focus:bg-transparent",
 								)}
 								render={<Link href={item.path} />}>
 								{item.name}

@@ -50,7 +50,7 @@ const HeroSection = () => {
 			</div>
 			<div className="relative flex flex-col items-center justify-center gap-6 text-center px-4">
 				<div className="flex flex-col items-center gap-2">
-					<h1 className="text-3xl font-bold text-primary-foreground">
+					<h1 className="text-3xl sm:text-4xl leading-8 md:leading-10 lg:leading-14 font-bold text-primary-foreground">
 						Find Your Space.
 						<br />
 						Create Something <span className="text-primary">Extraordinary.</span>
