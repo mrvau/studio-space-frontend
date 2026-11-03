@@ -6,10 +6,10 @@ import {
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
-	navigationMenuTriggerStyle,
 } from "../ui/navigation-menu";
 import Link from "next/link";
 import useHash from "@/hooks/useHash";
+import { cn } from "cn";
 
 const NAV_ITEMS = [
 	{ name: "Home", path: "/" },
@@ -18,22 +18,23 @@ const NAV_ITEMS = [
 	{ name: "About Us", path: "#about-us" },
 ];
 
-const NavBar = () => {
+const NavBar = ({ className = "" }: { className?: string }) => {
 	const pathname = usePathname();
 	const hash = useHash();
 
 	return (
-		<NavigationMenu>
-			<NavigationMenuList>
+		<NavigationMenu className={cn("flex-none")}>
+			<NavigationMenuList className={cn(className)}>
 				{NAV_ITEMS.map((item) => {
 					const active = hash ? hash === item.path : pathname === item.path;
 					return (
-						<NavigationMenuItem
-							key={item.path}
-							className={active ? "text-primary border-b border-primary" : ""}>
+						<NavigationMenuItem key={item.path}>
 							<NavigationMenuLink
-								render={<Link href={item.path} />}
-								className={`${navigationMenuTriggerStyle()} focus:bg-transparent`}>
+								className={cn(
+									active ? "text-primary font-semibold" : "text-muted-foreground",
+									"hover:text-primary hover:bg-transparent rounded-none text-lg sm:text-sm",
+								)}
+								render={<Link href={item.path} />}>
 								{item.name}
 							</NavigationMenuLink>
 						</NavigationMenuItem>
