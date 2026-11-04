@@ -66,7 +66,7 @@ const AuthenticationButtons = ({
 	const router = useRouter();
 
 	if (isPending) {
-		return <Skeleton className="size-10 shrink-0 rounded-full" />;
+		return <Skeleton className="size-8 shrink-0 rounded-full" />;
 	}
 
 	const handleLogout = async () => {

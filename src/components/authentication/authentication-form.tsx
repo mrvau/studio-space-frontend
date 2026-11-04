@@ -81,34 +81,6 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 		}
 	};
 
-	const handleGithubAuthentication = async () => {
-		try {
-			const { error } = await authClient.signIn.social({
-				provider: "github",
-			});
-
-			if (error) {
-				toast.add({
-					type: "error",
-					title: isRegister ? "Registration failed" : "Login failed",
-					description: error.message,
-				});
-				return;
-			}
-
-			toast.add({
-				type: "success",
-				title: isRegister ? "Registration successful" : "Login successful",
-				description: isRegister ? "Successfully registered with GitHub." : "Welcome back.",
-			});
-		} catch {
-			toast.add({
-				type: "error",
-				title: isRegister ? "Registration failed" : "Login failed",
-				description: "Something went wrong. Please try again.",
-			});
-		}
-	};
 	const handleGoogleAuthentication = async () => {
 		try {
 			const { error } = await authClient.signIn.social({
@@ -235,17 +207,7 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 							<FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
 								Or continue with
 							</FieldSeparator>
-							<Field className="grid grid-cols-2 gap-4">
-								<Button
-									className="cursor-pointer"
-									variant="outline"
-									type="button"
-									onClick={handleGithubAuthentication}>
-									<Image src={"/github.svg"} alt="Github" width={18} height={18} />
-									<span className="sr-only">
-										{isRegister ? "Sign up with GitHub" : "Login with GitHub"}
-									</span>
-								</Button>
+							<Field>
 								<Button
 									className="cursor-pointer"
 									variant="outline"
