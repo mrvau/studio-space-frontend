@@ -17,6 +17,8 @@ import { Ellipsis, LogOut } from "lucide-react";
 import { cn } from "cn";
 import { authClient } from "@/lib/auth-client";
 import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
+import { toast } from "../ui/toast";
 
 const TriggerElement = ({
 	position,
@@ -35,7 +37,7 @@ const TriggerElement = ({
 	}
 
 	return (
-		<div className="flex items-center gap-2 active:bg-muted  rounded">
+		<div className="flex items-center gap-2">
 			<Avatar>
 				<AvatarImage src={user.image as string} />
 				<AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -61,10 +63,29 @@ const AuthenticationButtons = ({
 	className?: string;
 }) => {
 	const { data, isPending } = authClient.useSession();
+	const router = useRouter();
 
 	if (isPending) {
 		return <Skeleton className="size-10 shrink-0 rounded-full" />;
 	}
+
+	const handleLogout = async () => {
+		try {
+			await authClient.signOut({
+				fetchOptions: {
+					onSuccess: () => {
+						router.replace("/login");
+					},
+				},
+			});
+		} catch {
+			toast.add({
+				type: "error",
+				title: "Something went wrong!",
+				description: "Please try again.",
+			});
+		}
+	};
 
 	return (
 		<>
@@ -84,8 +105,19 @@ const AuthenticationButtons = ({
 			) : (
 				<Popover>
 					<PopoverTrigger
-						render={<TriggerElement position={position} user={data.user} />}
-						nativeButton={false}
+						render={
+							<button
+								type="button"
+								aria-label="Open account menu"
+								className={cn(
+									"cursor-pointer border-0 bg-transparent p-0 text-left shadow-none hover:bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+									position === "header"
+										? "rounded-full"
+										: "flex w-full items-center gap-2 rounded px-0 py-1 active:bg-muted",
+								)}>
+								<TriggerElement position={position} user={data.user} />
+							</button>
+						}
 					/>
 					<PopoverContent align="end" className="w-fit">
 						<PopoverHeader className="flex-row items-center gap-4">
@@ -109,7 +141,7 @@ const AuthenticationButtons = ({
 							<Link href="/">My Bookings</Link>
 						</Button>
 						<Separator />
-						<Button variant="destructive" className="w-full">
+						<Button variant="destructive" className="w-full" onClick={handleLogout}>
 							<LogOut />
 							Logout
 						</Button>
