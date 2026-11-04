@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Aperture, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { Separator } from "../ui/separator";
 
 const quickLinks = [
 	{ label: "Home", href: "/" },
@@ -19,6 +20,7 @@ const studioCategories = [
 
 const Footer = () => (
 	<footer className="mt-auto bg-background text-foreground">
+		<Separator />
 		<div className="container grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1.3fr] lg:gap-8 lg:py-16">
 			<div>
 				<Link

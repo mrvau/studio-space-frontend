@@ -5,7 +5,7 @@ import { Aperture, Menu } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
 import NavBar from "./navbar";
-import AuthenticationButtons from "./authentication-buttons";
+import AuthenticationButtons from "../authentication/authentication-buttons";
 
 const SideNavBar = () => {
 	return (

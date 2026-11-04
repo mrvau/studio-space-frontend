@@ -1,6 +1,8 @@
+"use client";
+
 import { Button } from "../ui/button";
 import Link from "next/link";
-import ToggleTheme from "./toggle-theme";
+import ToggleTheme from "../layout/toggle-theme";
 import { Separator } from "../ui/separator";
 import {
 	Popover,
@@ -13,13 +15,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Ellipsis, LogOut } from "lucide-react";
 import { cn } from "cn";
+import { authClient } from "@/lib/auth-client";
+import { Skeleton } from "../ui/skeleton";
 
-const TriggerElement = ({ position }: { position: string }) => {
+const TriggerElement = ({
+	position,
+	user,
+}: {
+	position: string;
+	user: typeof authClient.$Infer.Session.user;
+}) => {
 	if (position === "header") {
 		return (
 			<Avatar>
-				<AvatarImage src={"/next.svg"} />
-				<AvatarFallback>NN</AvatarFallback>
+				<AvatarImage src={user.image as string} />
+				<AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
 			</Avatar>
 		);
 	}
@@ -27,13 +37,13 @@ const TriggerElement = ({ position }: { position: string }) => {
 	return (
 		<div className="flex items-center gap-2 active:bg-muted  rounded">
 			<Avatar>
-				<AvatarImage src={"/next.svg"} />
-				<AvatarFallback>NN</AvatarFallback>
+				<AvatarImage src={user.image as string} />
+				<AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
 			</Avatar>
 			<div className="flex flex-1 items-center justify-between sm:hidden">
 				<div>
-					<p className="font-semibold text-base">Minhajul Islam Alif</p>
-					<span className="text-muted-foreground">alif@gmail.com</span>
+					<p className="font-semibold text-base">{user.name}</p>
+					<span className="text-muted-foreground">{user.email}</span>
 				</div>
 				<div>
 					<Ellipsis />
@@ -50,10 +60,15 @@ const AuthenticationButtons = ({
 	position: string;
 	className?: string;
 }) => {
-	const session = 1;
+	const { data, isPending } = authClient.useSession();
+
+	if (isPending) {
+		return <Skeleton className="size-10 shrink-0 rounded-full" />;
+	}
+
 	return (
 		<>
-			{!session ? (
+			{!data?.session ? (
 				<div className="flex items-center gap-2">
 					<ToggleTheme />
 					<div className={cn("items-center gap-2", className)}>
@@ -68,12 +83,15 @@ const AuthenticationButtons = ({
 				</div>
 			) : (
 				<Popover>
-					<PopoverTrigger render={<TriggerElement position={position} />} nativeButton={false} />
+					<PopoverTrigger
+						render={<TriggerElement position={position} user={data.user} />}
+						nativeButton={false}
+					/>
 					<PopoverContent align="end" className="w-fit">
 						<PopoverHeader className="flex-row items-center gap-4">
 							<div>
-								<PopoverTitle>Minhajul Islam Alif</PopoverTitle>
-								<PopoverDescription>minhajul.islam.alif@gmail.com</PopoverDescription>
+								<PopoverTitle>{data.user.name}</PopoverTitle>
+								<PopoverDescription>{data.user.email}</PopoverDescription>
 							</div>
 							<ToggleTheme />
 						</PopoverHeader>

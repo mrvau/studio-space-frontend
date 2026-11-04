@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
-import { Separator } from "@/components/ui/separator";
+import { Toaster } from "@/components/ui/toast";
 
 const fontSans = Plus_Jakarta_Sans({
 	subsets: ["latin"],
@@ -40,8 +40,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 					disableTransitionOnChange>
 					<Header />
 					<main>{children}</main>
-					<Separator />
 					<Footer />
+					<Toaster />
 				</ThemeProvider>
 			</body>
 		</html>
