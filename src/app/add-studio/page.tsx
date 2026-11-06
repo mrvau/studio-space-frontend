@@ -18,7 +18,7 @@ import { ArrowLeft, BadgeCheck, Building2, ImagePlus, MapPin, Sparkles } from "l
 import Link from "next/link";
 import { useState, type SubmitEvent } from "react";
 import { toast } from "@/components/ui/toast";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const categories: StudioCategory[] = [
 	"Photo Studio",
@@ -44,10 +44,10 @@ const amenities = [
 ];
 
 export default function AddStudioPage() {
+	const router = useRouter();
 	const { data, isPending } = authClient.useSession();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [category, setCategory] = useState<StudioCategory | "">("");
-	const router = useRouter();
 
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();

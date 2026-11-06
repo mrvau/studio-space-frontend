@@ -1,12 +1,34 @@
+"use client";
+
 import { IStudio } from "@/types";
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { LoaderCircle, Pencil, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import { toast } from "../ui/toast";
 
-const StudioCard = ({ studio }: { studio: IStudio }) => {
+const StudioCard = ({ studio, manage = false, onDeleted }: { studio: IStudio; manage?: boolean; onDeleted?: (id: string) => void }) => {
+	const [confirmingDelete, setConfirmingDelete] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+
+	const deleteStudio = async () => {
+		if (isDeleting) return;
+		setIsDeleting(true);
+		try {
+			const response = await fetch(`http://localhost:8000/api/v1/studio/${studio._id}`, { method: "DELETE" });
+			if (!response.ok) throw new Error("Delete request failed");
+			onDeleted?.(studio._id);
+			setConfirmingDelete(false);
+			toast.add({ type: "success", title: "Studio deleted", description: `${studio.title} was removed from your listings.` });
+		} catch {
+			toast.add({ type: "error", title: "Could not delete studio", description: "Please try again." });
+		} finally {
+			setIsDeleting(false);
+		}
+	};
+
 	return (
 		<Card className="group gap-0 py-0 transition-shadow hover:shadow-lg">
 			<div className="relative aspect-4/3 overflow-hidden">
@@ -35,11 +57,30 @@ const StudioCard = ({ studio }: { studio: IStudio }) => {
 				</div>
 			</CardHeader>
 			<CardContent className="pb-4 text-sm text-muted-foreground">{studio.address}</CardContent>
-			<CardFooter className="border-t px-4 py-3">
-				<Link href={`/studios/${studio._id}`} className={buttonVariants({ className: "w-full" })}>
+			<CardFooter className="flex flex-wrap gap-2 border-t px-4 py-3">
+				{manage && <Link href={`/update-studio/${studio._id}`} className={buttonVariants({ variant: "outline", className: "flex-1" })}>
+					<Pencil aria-hidden="true" /> Update
+				</Link>}
+				{manage && <Button type="button" variant="destructive" className="flex-1" onClick={() => setConfirmingDelete(true)}>
+					<Trash2 aria-hidden="true" /> Delete
+				</Button>}
+				<Link href={`/studios/${studio._id}`} className={buttonVariants({ className: manage ? "w-full" : "w-full" })}>
 					View Details
 				</Link>
 			</CardFooter>
+			{confirmingDelete && <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !isDeleting) setConfirmingDelete(false); }}>
+				<section role="alertdialog" aria-modal="true" aria-labelledby={`delete-title-${studio._id}`} aria-describedby={`delete-description-${studio._id}`} className="w-full max-w-md rounded-xl border bg-background p-6 shadow-xl">
+					<h2 id={`delete-title-${studio._id}`} className="text-lg font-semibold">Delete this studio?</h2>
+					<p id={`delete-description-${studio._id}`} className="mt-2 text-sm text-muted-foreground">“{studio.title}” will be permanently removed from your listings.</p>
+					<div className="mt-6 flex justify-end gap-2">
+						<Button type="button" variant="outline" disabled={isDeleting} onClick={() => setConfirmingDelete(false)}>Cancel</Button>
+						<Button type="button" variant="destructive" disabled={isDeleting} onClick={deleteStudio}>
+							{isDeleting ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Trash2 aria-hidden="true" />}
+							{isDeleting ? "Deleting…" : "Delete studio"}
+						</Button>
+					</div>
+				</section>
+			</div>}
 		</Card>
 	);
 };
