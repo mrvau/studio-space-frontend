@@ -1,11 +1,10 @@
-import { Data } from "@/types";
 import { CircleStar } from "lucide-react";
 import FeaturedContent from "./featured-content";
 import { Suspense } from "react";
 import FeaturedContentSkeleton from "./featured-content-skeleton";
 
-const getFeaturedStudios = async (): Promise<Data> => {
-	const res = await fetch("http://localhost:3000/mock-data.json");
+const getFeaturedStudios = async () => {
+	const res = await fetch("http://localhost:8000/api/v1/studio");
 	return res.json();
 };
 

@@ -132,13 +132,13 @@ const AuthenticationButtons = ({
 							<Link href="/">Dashboard</Link>
 						</Button>
 						<Button variant="ghost" className="w-full justify-start">
-							<Link href="/">Add New Studio</Link>
+							<Link href="/add-studio">Add New Studio</Link>
 						</Button>
 						<Button variant="ghost" className="w-full justify-start">
-							<Link href="/">My Studio Listings</Link>
+							<Link href="/my-listings">My Studio Listings</Link>
 						</Button>
 						<Button variant="ghost" className="w-full justify-start">
-							<Link href="/">My Bookings</Link>
+							<Link href="/my-bookings">My Bookings</Link>
 						</Button>
 						<Separator />
 						<Button variant="destructive" className="w-full" onClick={handleLogout}>
