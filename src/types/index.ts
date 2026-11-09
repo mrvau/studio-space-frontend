@@ -51,3 +51,9 @@ export interface IBooking {
 	paymentStatus: PaymentStatus;
 	specialRequest: string;
 }
+
+export type SuccessPromise<T> = Promise<{
+	success: boolean;
+	message: string;
+	data: T | [];
+}>;

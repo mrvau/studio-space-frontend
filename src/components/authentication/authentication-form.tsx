@@ -55,14 +55,10 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 						callbackURL: "/",
 					});
 
-			if (error) {
-				toast.add({
-					type: "error",
-					title: isRegister ? "Registration failed" : "Login failed",
-					description: error.message,
+			if (error)
+				throw new Error(isRegister ? "Registration failed." : "Login failed.", {
+					cause: error.message,
 				});
-				return;
-			}
 
 			toast.add({
 				type: "success",
@@ -70,11 +66,11 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 				description: isRegister ? "Please sign in to your account." : "Welcome back.",
 			});
 			router.replace(isRegister ? "/login" : "/");
-		} catch {
+		} catch (error: unknown) {
 			toast.add({
 				type: "error",
-				title: isRegister ? "Registration failed" : "Login failed",
-				description: "Something went wrong. Please try again.",
+				title: error instanceof Error ? error.message : "Something went wrong.",
+				description: error instanceof Error ? (error.cause as string) : "Please try again later.",
 			});
 		} finally {
 			setIsSubmitting(false);
@@ -87,25 +83,21 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 				provider: "google",
 			});
 
-			if (error) {
-				toast.add({
-					type: "error",
-					title: isRegister ? "Registration failed" : "Login failed",
-					description: error.message,
+			if (error)
+				throw new Error(isRegister ? "Registration failed." : "Login failed.", {
+					cause: error.message,
 				});
-				return;
-			}
 
 			toast.add({
 				type: "success",
 				title: isRegister ? "Registration successful" : "Login successful",
 				description: isRegister ? "Successfully registered with Google." : "Welcome back.",
 			});
-		} catch {
+		} catch (error: unknown) {
 			toast.add({
 				type: "error",
-				title: isRegister ? "Registration failed" : "Login failed",
-				description: "Something went wrong. Please try again.",
+				title: error instanceof Error ? error.message : "Something went wrong.",
+				description: error instanceof Error ? (error.cause as string) : "Please try again later.",
 			});
 		}
 	};

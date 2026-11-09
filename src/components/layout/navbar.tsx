@@ -14,14 +14,13 @@ import { cn } from "cn";
 const NAV_ITEMS = [
 	{ name: "Home", path: "/" },
 	{ name: "Explore Studios", path: "/studios" },
-	{ name: "How It Works", path: "#how-it-works" },
-	{ name: "About Us", path: "#about-us" },
+	{ name: "How It Works", path: "/#how-it-works" },
+	{ name: "About Us", path: "/#about-us" },
 ];
 
 const NavBar = ({ className = "" }: { className?: string }) => {
 	const pathname = usePathname();
 	const hash = useHash();
-
 	return (
 		<NavigationMenu className={cn("flex-none")}>
 			<NavigationMenuList className={cn(className)}>

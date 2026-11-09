@@ -1,24 +1,39 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import MyListingsContent from "@/components/studio/my-listings-content";
-import type { IStudio } from "@/types";
+import { Suspense } from "react";
+import RenderSkeleton from "@/components/shared/render-skeleton";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import CardGrid from "@/components/shared/card-grid";
 
-async function getMyListings(ownerEmail: string): Promise<IStudio[]> {
-	try {
-		const response = await fetch(`http://localhost:8000/api/v1/studio?ownerEmail=${encodeURIComponent(ownerEmail)}`, { cache: "no-store" });
-		if (!response.ok) return [];
-		const result = await response.json();
-		const studios: IStudio[] = result.data ?? result;
-		return Array.isArray(studios) ? studios.filter((studio) => studio.ownerEmail === ownerEmail) : [];
-	} catch {
-		return [];
-	}
-}
-
-export default async function MyListingsPage() {
+const MyListingsPage = async () => {
 	const session = await auth.api.getSession({ headers: await headers() });
+
 	if (!session?.user) redirect("/login");
-	const listings = await getMyListings(session.user.email);
-	return <MyListingsContent listings={listings} />;
-}
+
+	const { user } = session;
+	const query = `ownerEmail=${user.email}`;
+
+	return (
+		<section className="container w-full py-10 sm:py-14">
+			<div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
+						Host dashboard
+					</p>
+					<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">My studio listings</h1>
+					<p className="mt-2 text-muted-foreground">Manage the creative spaces you host.</p>
+				</div>
+				<Button nativeButton={false} render={<Link href="/add-studio" />}>
+					Add a studio
+				</Button>
+			</div>
+			<Suspense fallback={<RenderSkeleton />}>
+				<CardGrid manage query={query} />
+			</Suspense>
+		</section>
+	);
+};
+
+export default MyListingsPage;

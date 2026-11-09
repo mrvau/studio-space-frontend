@@ -1,16 +1,10 @@
 import { CircleStar } from "lucide-react";
-import FeaturedContent from "./featured-content";
 import { Suspense } from "react";
-import FeaturedContentSkeleton from "./featured-content-skeleton";
-
-const getFeaturedStudios = async () => {
-	const res = await fetch("http://localhost:8000/api/v1/studio");
-	return res.json();
-};
+import RenderSkeleton from "../shared/render-skeleton";
+import CardGrid from "../shared/card-grid";
 
 const FeaturedSection = () => {
-	const promise = getFeaturedStudios();
-
+	const query = "limit=6";
 	return (
 		<section className="container py-6">
 			<div className="mb-8 flex flex-col items-center justify-center gap-2 text-center">
@@ -20,8 +14,8 @@ const FeaturedSection = () => {
 					Explore some of the most loved creative spaces, selected for your next great idea.
 				</p>
 			</div>
-			<Suspense fallback={<FeaturedContentSkeleton />}>
-				<FeaturedContent promise={promise} />
+			<Suspense fallback={<RenderSkeleton />}>
+				<CardGrid query={query} />
 			</Suspense>
 		</section>
 	);

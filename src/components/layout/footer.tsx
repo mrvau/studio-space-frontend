@@ -34,7 +34,7 @@ const Footer = () => (
 						<span className="text-primary">Studio</span>Space
 					</span>
 				</Link>
-				<p className="max-w-xs text-sm leading-relaxed text-neutral-300">
+				<p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
 					A home for bold ideas. Discover and book inspiring creative spaces, and make room for what
 					you want to create.
 				</p>
@@ -44,7 +44,7 @@ const Footer = () => (
 						target="_blank"
 						rel="noreferrer"
 						aria-label="StudioSpace on X"
-						className="flex size-9 items-center justify-center rounded-full border border-neutral-50/15 text-neutral-300 transition-colors hover:bg-neutral-50/10 hover:text-neutral-50">
+						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
 						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="size-4">
 							<path d="M18.901 1.153h3.68L14.54 10.15 24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932zm-1.29 19.46h2.039L6.486 3.27h-2.19z" />
 						</svg>
@@ -54,7 +54,7 @@ const Footer = () => (
 						target="_blank"
 						rel="noreferrer"
 						aria-label="StudioSpace on Instagram"
-						className="flex size-9 items-center justify-center rounded-full border border-neutral-50/15 text-neutral-300 transition-colors hover:bg-neutral-50/10 hover:text-neutral-50">
+						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
 						<Image src={"/instagram.svg"} alt="Instagram Logo" width={24} height={24} />
 					</a>
 					<a
@@ -62,7 +62,7 @@ const Footer = () => (
 						target="_blank"
 						rel="noreferrer"
 						aria-label="StudioSpace on Facebook"
-						className="flex size-9 items-center justify-center rounded-full border border-neutral-50/15 text-neutral-300 transition-colors hover:bg-neutral-50/10 hover:text-neutral-50">
+						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
 						<Image src={"/facebook.svg"} alt="Facebook Logo" width={24} height={24} />
 					</a>
 					<a
@@ -70,7 +70,7 @@ const Footer = () => (
 						target="_blank"
 						rel="noreferrer"
 						aria-label="StudioSpace on YouTube"
-						className="flex size-9 items-center justify-center rounded-full border border-neutral-50/15 text-neutral-300 transition-colors hover:bg-neutral-50/10 hover:text-neutral-50">
+						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
 						<Image src={"/youtube.svg"} alt="Youtube Logo" width={24} height={24} />
 					</a>
 				</div>
@@ -83,7 +83,7 @@ const Footer = () => (
 						<li key={label}>
 							<Link
 								href={href}
-								className="text-sm text-neutral-300 transition-colors hover:text-neutral-50">
+								className="text-sm text-muted-foreground transition-colors hover:text-foreground">
 								{label}
 							</Link>
 						</li>
@@ -98,7 +98,7 @@ const Footer = () => (
 						<li key={category}>
 							<Link
 								href="/studios"
-								className="text-sm text-neutral-300 transition-colors hover:text-neutral-50">
+								className="text-sm text-muted-foreground transition-colors hover:text-foreground">
 								{category}
 							</Link>
 						</li>
@@ -108,7 +108,7 @@ const Footer = () => (
 
 			<div>
 				<h2 className="mb-2 text-sm font-semibold">A little inspiration, occasionally</h2>
-				<p className="mb-4 text-sm leading-relaxed text-neutral-300">
+				<p className="mb-4 text-sm leading-relaxed text-muted-foreground">
 					Get studio discoveries and creative ideas in your inbox.
 				</p>
 				<form className="flex gap-2" action="#" aria-label="Newsletter signup">
@@ -122,7 +122,7 @@ const Footer = () => (
 						placeholder="you@example.com"
 						autoComplete="email"
 						required
-						className="min-w-0 flex-1 rounded-lg border border-neutral-50/15 bg-neutral-50/5 px-3 py-2 text-sm text-neutral-50 outline-none placeholder:text-neutral-400 focus-visible:ring-2 focus-visible:ring-primary"
+						className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary"
 					/>
 					<button
 						type="submit"
@@ -134,14 +134,14 @@ const Footer = () => (
 			</div>
 		</div>
 
-		<div className="border-t border-neutral-50/10">
-			<div className="container flex flex-col gap-3 py-5 text-xs text-neutral-400 sm:flex-row sm:items-center sm:justify-between">
+		<div className="border-t border-border">
+			<div className="container flex flex-col gap-3 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
 				<p>© {new Date().getFullYear()} StudioSpace. All rights reserved.</p>
 				<div className="flex gap-5">
-					<Link href="/terms" className="transition-colors hover:text-neutral-50">
+					<Link href="/terms" className="transition-colors hover:text-foreground">
 						Terms
 					</Link>
-					<Link href="/privacy" className="transition-colors hover:text-neutral-50">
+					<Link href="/privacy" className="transition-colors hover:text-foreground">
 						Privacy
 					</Link>
 				</div>
