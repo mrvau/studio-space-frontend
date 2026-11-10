@@ -4,7 +4,7 @@ import RenderSkeleton from "../shared/render-skeleton";
 import CardGrid from "../shared/card-grid";
 
 const FeaturedSection = () => {
-	const query = "limit=6";
+	const featuredApiEndpoint = "/featured";
 	return (
 		<section className="container py-6">
 			<div className="mb-8 flex flex-col items-center justify-center gap-2 text-center">
@@ -15,7 +15,7 @@ const FeaturedSection = () => {
 				</p>
 			</div>
 			<Suspense fallback={<RenderSkeleton />}>
-				<CardGrid query={query} />
+				<CardGrid query={featuredApiEndpoint} />
 			</Suspense>
 		</section>
 	);

@@ -13,7 +13,7 @@ const MyListingsPage = async () => {
 	if (!session?.user) redirect("/login");
 
 	const { user } = session;
-	const query = `ownerEmail=${user.email}`;
+	const query = `?ownerEmail=${user.email}`;
 
 	return (
 		<section className="container w-full py-10 sm:py-14">

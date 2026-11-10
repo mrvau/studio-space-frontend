@@ -17,7 +17,7 @@ const getStudios = async (query: string | null): SuccessPromise<IStudio[]> => {
 
 	console.log(studioApiUrl, query);
 
-	const response = await fetch(query ? `${studioApiUrl}?${query}` : studioApiUrl);
+	const response = await fetch(query ? `${studioApiUrl}${query}` : studioApiUrl);
 	return response.json();
 };
 

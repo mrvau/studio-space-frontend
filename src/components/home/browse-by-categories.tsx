@@ -10,7 +10,7 @@ const categories = [
 		accent: "bg-violet-500/10 text-violet-600 group-hover:bg-violet-500 group-hover:text-white",
 	},
 	{
-		name: "Sound Stages",
+		name: "Film Stages",
 		description: "Production-ready stages for film and video crews.",
 		icon: Clapperboard,
 		accent: "bg-rose-500/10 text-rose-600 group-hover:bg-rose-500 group-hover:text-white",
@@ -28,7 +28,7 @@ const categories = [
 		accent: "bg-amber-500/10 text-amber-600 group-hover:bg-amber-500 group-hover:text-white",
 	},
 	{
-		name: "Art Workshops",
+		name: "Workshops",
 		description: "Hands-on spaces for making, teaching, and sharing.",
 		icon: Palette,
 		accent: "bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white",
