@@ -49,9 +49,10 @@ const amenities = [
 interface StudioFormProps {
 	user: User;
 	mode: "create" | "update";
+	studio?: IStudio;
 }
 
-const StudioForm = ({ user, mode }: StudioFormProps) => {
+const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -114,6 +115,51 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 
 	const handleUpdateStudio = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (isSubmitting || !studio) return;
+
+		const formData = new FormData(e.currentTarget);
+		const { _id, ...updateStudio } = studio;
+		const updatedStudio: Omit<IStudio, "_id"> = {
+			...updateStudio,
+			title: String(formData.get("title") ?? "").trim(),
+			category: String(formData.get("category")) as StudioCategory,
+			hourlyRate: Number(formData.get("hourlyRate")),
+			securityDeposit: Number(formData.get("securityDeposit")),
+			maxCapacity: Number(formData.get("maxCapacity")),
+			address: String(formData.get("address") ?? "").trim(),
+			imageURL: String(formData.get("imageURL") ?? "").trim(),
+			gallery: String(formData.get("gallery") ?? "")
+				.split(/\r?\n/)
+				.map((url) => url.trim())
+				.filter(Boolean),
+			amenities: formData.getAll("amenities").map(String),
+			overview: String(formData.get("overview") ?? "").trim(),
+		};
+
+		try {
+			setIsSubmitting(true);
+			const response = await fetch(`http://localhost:8000/api/v1/studio/${_id}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(updatedStudio),
+			});
+			if (!response.ok) throw new Error("Unable to update studio.");
+
+			toast.add({
+				type: "success",
+				title: "Studio updated",
+				description: "Your listing changes have been saved.",
+			});
+			router.push("/my-listings");
+		} catch (error: unknown) {
+			toast.add({
+				type: "error",
+				title: error instanceof Error ? error.message : "Something went wrong.",
+				description: "Please try again later.",
+			});
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -131,6 +177,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 					<Input
 						id="title"
 						name="title"
+						defaultValue={studio?.title}
 						placeholder="e.g. The Daylight Loft"
 						required
 						maxLength={100}
@@ -142,7 +189,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 						<FieldLabel htmlFor="category">
 							Category <span className="text-destructive">*</span>
 						</FieldLabel>
-						<Select name="category" items={categories} required>
+						<Select name="category" items={categories} defaultValue={studio?.category} required>
 							<SelectTrigger id="category">
 								<SelectValue />
 							</SelectTrigger>
@@ -164,6 +211,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 						<Input
 							id="capacity"
 							name="maxCapacity"
+							defaultValue={studio?.maxCapacity}
 							type="number"
 							min="1"
 							step="1"
@@ -185,6 +233,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 					<Input
 						id="address"
 						name="address"
+						defaultValue={studio?.address}
 						autoComplete="street-address"
 						placeholder="Street, city, country"
 						required
@@ -203,6 +252,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 							<Input
 								id="hourlyRate"
 								name="hourlyRate"
+								defaultValue={studio?.hourlyRate}
 								type="number"
 								min="0.01"
 								step="0.01"
@@ -223,6 +273,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 							<Input
 								id="securityDeposit"
 								name="securityDeposit"
+								defaultValue={studio?.securityDeposit}
 								type="number"
 								min="0"
 								step="0.01"
@@ -246,6 +297,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 					<Input
 						id="imageURL"
 						name="imageURL"
+						defaultValue={studio?.imageURL}
 						type="url"
 						placeholder="https://example.com/your-studio.jpg"
 						required
@@ -257,6 +309,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 						id="gallery"
 						name="gallery"
 						placeholder="Add one https:// image URL per line"
+						defaultValue={studio?.gallery?.join("\n")}
 						rows={3}
 					/>
 					<FieldDescription>Optional. Enter one image URL per line.</FieldDescription>
@@ -270,6 +323,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 						name="overview"
 						placeholder="Describe the space, equipment, natural light, access, and what creators can make here..."
 						rows={6}
+						defaultValue={studio?.overview}
 						required
 						minLength={30}
 						maxLength={2000}
@@ -291,6 +345,7 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 							id={`amenity-${index}`}
 							name="amenities"
 							value={amenity}
+							defaultChecked={studio?.amenities?.includes(amenity)}
 							className="cursor-pointer"
 						/>
 						<FieldLabel htmlFor={`amenity-${index}`} className="cursor-pointer">
@@ -338,7 +393,13 @@ const StudioForm = ({ user, mode }: StudioFormProps) => {
 					Cancel
 				</Button>
 				<Button type="submit" size="lg" className={"cursor-pointer"} disabled={isSubmitting}>
-					{isSubmitting ? "Preparing…" : "Create studio"}
+					{isSubmitting
+						? mode === "create"
+							? "Preparing…"
+							: "Saving…"
+						: mode === "create"
+							? "Create studio"
+							: "Save changes"}
 				</Button>
 			</div>
 		</form>
