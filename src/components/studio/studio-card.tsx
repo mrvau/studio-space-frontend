@@ -21,9 +21,11 @@ import {
 import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { cn } from "cn";
+import { useRouter } from "next/navigation";
 // import Error from "next/error";
 
 const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: boolean }) => {
+	const router = useRouter();
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const handleDeleteStudio = async () => {
@@ -42,6 +44,7 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 				title: "Studio deleted",
 				description: `${studio.title} was removed from your listings.`,
 			});
+			router.refresh();
 		} catch (error: unknown) {
 			toast.add({
 				type: "error",
