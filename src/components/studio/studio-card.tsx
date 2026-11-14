@@ -85,50 +85,49 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 			<CardContent className="w-xs pb-4 text-sm text-muted-foreground">
 				<p className="truncate">{studio.address}</p>
 			</CardContent>
-			<CardFooter className="flex gap-2 border-t px-4 py-3">
+			<CardFooter className="flex flex-col gap-2 border-t px-4 py-3">
 				{manage && (
-					<Link
-						href={`/studios/edit/${studio._id}`}
-						className={buttonVariants({ variant: "outline", className: "flex-1" })}>
-						<Pencil aria-hidden="true" /> Update
-					</Link>
+					<div className="flex items-center gap-2 w-full">
+						<Link
+							href={`/studios/edit/${studio._id}`}
+							className={buttonVariants({ variant: "outline", className: "flex-1" })}>
+							<Pencil aria-hidden="true" /> Update
+						</Link>
+						<Dialog>
+							<DialogTrigger
+								className={cn(buttonVariants({ variant: "destructive" }), "cursor-pointer")}>
+								{isDeleting ? <Spinner /> : <Trash2 />}
+								{isDeleting ? "Deleting..." : "Delete"}
+							</DialogTrigger>
+							<DialogContent showCloseButton={false}>
+								<DialogHeader>
+									<DialogTitle>Delete this studio?</DialogTitle>
+									<DialogDescription>
+										<span className="font-semibold text-primary-foreground">
+											&ldquo;{studio.title}&rdquo;
+										</span>{" "}
+										will be removed permanently from your listings
+									</DialogDescription>
+								</DialogHeader>
+								<DialogFooter>
+									<DialogClose>Cancel</DialogClose>
+									<DialogClose
+										className={cn(buttonVariants({ variant: "destructive" }), "cursor-pointer")}
+										disabled={isDeleting}
+										onClick={handleDeleteStudio}>
+										<Trash2 /> Delete Studio
+									</DialogClose>
+								</DialogFooter>
+							</DialogContent>
+						</Dialog>
+					</div>
 				)}
-				{manage && (
-					<Dialog>
-						<DialogTrigger
-							className={cn(buttonVariants({ variant: "destructive" }), "cursor-pointer")}>
-							{isDeleting ? <Spinner /> : <Trash2 />}
-							{isDeleting ? "Deleting..." : "Delete"}
-						</DialogTrigger>
-						<DialogContent showCloseButton={false}>
-							<DialogHeader>
-								<DialogTitle>Delete this studio?</DialogTitle>
-								<DialogDescription>
-									<span className="font-semibold text-primary-foreground">
-										&ldquo;{studio.title}&rdquo;
-									</span>{" "}
-									will be removed permanently from your listings
-								</DialogDescription>
-							</DialogHeader>
-							<DialogFooter>
-								<DialogClose>Cancel</DialogClose>
-								<DialogClose
-									className={cn(buttonVariants({ variant: "destructive" }), "cursor-pointer")}
-									disabled={isDeleting}
-									onClick={handleDeleteStudio}>
-									<Trash2 /> Delete Studio
-								</DialogClose>
-							</DialogFooter>
-						</DialogContent>
-					</Dialog>
-				)}
-				{!manage && (
-					<Link
-						href={`/studios/${studio._id}`}
-						className={buttonVariants({ className: manage ? "w-full" : "w-full" })}>
-						View Details
-					</Link>
-				)}
+
+				<Link
+					href={`/studios/${studio._id}`}
+					className={buttonVariants({ className: manage ? "w-full" : "w-full" })}>
+					View Details
+				</Link>
 			</CardFooter>
 		</Card>
 	);
