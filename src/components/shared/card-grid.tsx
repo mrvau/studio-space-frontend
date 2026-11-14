@@ -14,9 +14,6 @@ import Link from "next/link";
 
 const getStudios = async (query: string | null): SuccessPromise<IStudio[]> => {
 	const studioApiUrl = `${process.env.API_BASE_URL}/studio`;
-
-	console.log(studioApiUrl, query);
-
 	const response = await fetch(query ? `${studioApiUrl}${query}` : studioApiUrl);
 	return response.json();
 };
@@ -29,8 +26,6 @@ const CardGrid = async ({
 	query?: string | null;
 }) => {
 	const { data: studios } = await getStudios(query);
-
-	console.log(studios);
 
 	return (
 		<>

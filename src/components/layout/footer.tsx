@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Aperture, ArrowRight } from "lucide-react";
-import Image from "next/image";
 import { Separator } from "../ui/separator";
 
 const quickLinks = [
@@ -45,9 +44,14 @@ const Footer = () => (
 						rel="noreferrer"
 						aria-label="StudioSpace on X"
 						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
-						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="size-4">
-							<path d="M18.901 1.153h3.68L14.54 10.15 24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.932zm-1.29 19.46h2.039L6.486 3.27h-2.19z" />
-						</svg>
+						<span
+							aria-hidden="true"
+							className="size-4 bg-current"
+							style={{
+								mask: "url('/twitter.svg') center / contain no-repeat",
+								WebkitMask: "url('/twitter.svg') center / contain no-repeat",
+							}}
+						/>
 					</a>
 					<a
 						href="https://instagram.com"
@@ -55,7 +59,14 @@ const Footer = () => (
 						rel="noreferrer"
 						aria-label="StudioSpace on Instagram"
 						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
-						<Image src={"/instagram.svg"} alt="Instagram Logo" width={24} height={24} />
+						<span
+							aria-hidden="true"
+							className="size-4 bg-current"
+							style={{
+								mask: "url('/instagram.svg') center / contain no-repeat",
+								WebkitMask: "url('/instagram.svg') center / contain no-repeat",
+							}}
+						/>
 					</a>
 					<a
 						href="https://facebook.com"
@@ -63,7 +74,14 @@ const Footer = () => (
 						rel="noreferrer"
 						aria-label="StudioSpace on Facebook"
 						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
-						<Image src={"/facebook.svg"} alt="Facebook Logo" width={24} height={24} />
+						<span
+							aria-hidden="true"
+							className="size-4 bg-current"
+							style={{
+								mask: "url('/facebook.svg') center / contain no-repeat",
+								WebkitMask: "url('/facebook.svg') center / contain no-repeat",
+							}}
+						/>
 					</a>
 					<a
 						href="https://youtube.com"
@@ -71,7 +89,14 @@ const Footer = () => (
 						rel="noreferrer"
 						aria-label="StudioSpace on YouTube"
 						className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
-						<Image src={"/youtube.svg"} alt="Youtube Logo" width={24} height={24} />
+						<span
+							aria-hidden="true"
+							className="size-4 bg-current"
+							style={{
+								mask: "url('/youtube.svg') center / contain no-repeat",
+								WebkitMask: "url('/youtube.svg') center / contain no-repeat",
+							}}
+						/>
 					</a>
 				</div>
 			</div>
