@@ -13,7 +13,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 
 const getStudios = async (query: string | null): SuccessPromise<IStudio[]> => {
-	const studioApiUrl = `${process.env.API_BASE_URL}/studio`;
+	const studioApiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`;
 	const response = await fetch(query ? `${studioApiUrl}${query}` : studioApiUrl);
 	return response.json();
 };

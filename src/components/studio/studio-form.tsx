@@ -88,7 +88,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 		try {
 			setIsSubmitting(true);
 
-			const response = await fetch("http://localhost:8000/api/v1/studio", {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -138,7 +138,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 
 		try {
 			setIsSubmitting(true);
-			const response = await fetch(`http://localhost:8000/api/v1/studio/${_id}`, {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${_id}`, {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(updatedStudio),

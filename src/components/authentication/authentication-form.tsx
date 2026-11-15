@@ -201,11 +201,18 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 							</FieldSeparator>
 							<Field>
 								<Button
-									className="cursor-pointer"
+									className="cursor-pointer text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
 									variant="outline"
 									type="button"
 									onClick={handleGoogleAuthentication}>
-									<Image src={"/google.svg"} alt="Google" width={18} height={18} />
+									<span
+										aria-hidden="true"
+										className="size-4 bg-current"
+										style={{
+											mask: "url('/google.svg') center / contain no-repeat",
+											WebkitMask: "url('/google.svg') center / contain no-repeat",
+										}}
+									/>
 									<span className="sr-only">
 										{isRegister ? "Sign up with Google" : "Login with Google"}
 									</span>

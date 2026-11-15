@@ -4,10 +4,12 @@ import { ArrowLeft, BadgeCheck, MapPin, Star, Users, Wallet } from "lucide-react
 import type { IStudio } from "@/types";
 import StudioBooking from "@/components/studio/studio-booking";
 import StudioGallery from "@/components/studio/studio-gallery";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 async function getStudio(id: string): Promise<IStudio | null> {
 	try {
-		const response = await fetch(`${process.env.API_BASE_URL}/studio/${id}`);
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${id}`);
 		if (response.status === 404) return null;
 		if (!response.ok) throw new Error("Unable to load studio");
 		const result = await response.json();
@@ -22,6 +24,8 @@ export default async function StudioDetailsPage({ params }: PageProps<"/studios/
 	const studio = await getStudio(id);
 
 	if (!studio) notFound();
+
+	const session = await auth.api.getSession({ headers: await headers() });
 
 	return (
 		<section className="container w-full py-8 sm:py-12">
@@ -138,7 +142,7 @@ export default async function StudioDetailsPage({ params }: PageProps<"/studios/
 						<p className="mt-1 text-sm text-muted-foreground">
 							${studio.securityDeposit} security deposit
 						</p>
-						<StudioBooking studio={studio} />
+						<StudioBooking studio={studio} session={session} />
 					</aside>
 				</div>
 			</div>
