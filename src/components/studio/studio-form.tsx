@@ -2,7 +2,7 @@
 
 import { SubmitEvent, useState } from "react";
 import FormSectionWrapper from "../shared/form-section-wrapper";
-import { Field, FieldDescription, FieldError, FieldLabel } from "../ui/field";
+import { Field, FieldDescription, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import {
 	Select,
@@ -21,6 +21,7 @@ import { toast } from "../ui/toast";
 import { User } from "better-auth";
 import { useRouter } from "next/navigation";
 import { IStudio, StudioCategory } from "@/types";
+import { authClient } from "@/lib/auth-client";
 
 const categories = [
 	{ label: "Select category", value: null },
@@ -88,10 +89,17 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 		try {
 			setIsSubmitting(true);
 
+			const { data } = await authClient.token();
+
+			const token = data?.token;
+
+			if (!token) throw new Error("User session expired.", { cause: "token" });
+
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify(studio),
 			});
@@ -108,8 +116,13 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 			toast.add({
 				type: "error",
 				title: error instanceof Error ? error.message : "Something went wrong.",
-				description: "Please try again later.",
+				description:
+					error instanceof Error && error.cause === "token"
+						? "Please login again."
+						: "Please try again later.",
 			});
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -182,7 +195,6 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 						required
 						maxLength={100}
 					/>
-					<FieldError>Studio title is required.</FieldError>
 				</Field>
 				<div className="grid gap-5 sm:grid-cols-2">
 					<Field>

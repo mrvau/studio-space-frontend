@@ -22,6 +22,7 @@ import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { cn } from "cn";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 // import Error from "next/error";
 
 const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: boolean }) => {
@@ -33,8 +34,17 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 		setIsDeleting(true);
 
 		try {
+			const { data } = await authClient.token();
+
+			const token = data?.token;
+
+			if (!token) throw new Error("User session expired.", { cause: "token" });
+
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${studio._id}`, {
 				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
 			});
 
 			if (!response.ok) throw new Error("Unable to delete studio.");
@@ -49,7 +59,10 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 			toast.add({
 				type: "error",
 				title: error instanceof Error ? error.message : "Something went wrong.",
-				description: "Please try again after some time.",
+				description:
+					error instanceof Error && error.cause === "token"
+						? "Please login again."
+						: "Please try again later.",
 			});
 		} finally {
 			setIsDeleting(false);

@@ -1,8 +1,15 @@
 import { Suspense } from "react";
 import CardGrid from "@/components/shared/card-grid";
 import RenderSkeleton from "@/components/shared/render-skeleton";
+import { IStudio, APIPromise } from "@/types";
 
-export default function StudiosPage() {
+const getAllStudios = async (): APIPromise<IStudio[]> => {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`);
+	return response.json();
+};
+
+const StudiosPage = async () => {
+	const allStudios = getAllStudios();
 	return (
 		<section className="container w-full py-10 sm:py-14">
 			<div className="mb-8">
@@ -15,8 +22,10 @@ export default function StudiosPage() {
 				</p>
 			</div>
 			<Suspense fallback={<RenderSkeleton />}>
-				<CardGrid />
+				<CardGrid studioPromise={allStudios} />
 			</Suspense>
 		</section>
 	);
-}
+};
+
+export default StudiosPage;

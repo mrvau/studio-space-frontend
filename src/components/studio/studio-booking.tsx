@@ -22,6 +22,7 @@ import { Session } from "@/lib/auth";
 import { User2Icon } from "lucide-react";
 import { toast } from "../ui/toast";
 import { Spinner } from "../ui/spinner";
+import { authClient } from "@/lib/auth-client";
 
 export default function StudioBooking({
 	studio,
@@ -86,10 +87,13 @@ export default function StudioBooking({
 		try {
 			setIsSubmitting(true);
 
+			const token = await authClient.token();
+
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/booking`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify(bookingData),
 			});
@@ -103,11 +107,15 @@ export default function StudioBooking({
 				title: "Booking created successfully.",
 				description: "Visit My Bookings page to view your bookings.",
 			});
-		} catch (error) {
+		} catch (error: unknown) {
 			console.error(error);
 			toast.add({
 				type: "error",
-				title: "Unable to create booking.",
+				title: error instanceof Error ? error.message : "Something went wrong.",
+				description:
+					error instanceof Error && error.cause === "token"
+						? "Please login again."
+						: "Please try again later",
 			});
 		} finally {
 			setIsSubmitting(false);

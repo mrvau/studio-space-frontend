@@ -1,19 +1,31 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
-import RenderSkeleton from "@/components/shared/render-skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CardGrid from "@/components/shared/card-grid";
+import { IStudio, APIPromise } from "@/types";
+import { Suspense } from "react";
+import RenderSkeleton from "@/components/shared/render-skeleton";
+
+const getMyListings = async (token: string): APIPromise<IStudio[]> => {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/listed`, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+	return response.json();
+};
 
 const MyListingsPage = async () => {
-	const session = await auth.api.getSession({ headers: await headers() });
+	const { token } = await auth.api.getToken({
+		headers: await headers(),
+	});
 
-	if (!session?.user) redirect("/login");
+	if (!token) redirect("/login");
 
-	const { user } = session;
-	const query = `?ownerEmail=${user.email}`;
+	const myListings = getMyListings(token);
 
 	return (
 		<section className="container w-full py-10 sm:py-14">
@@ -30,7 +42,7 @@ const MyListingsPage = async () => {
 				</Button>
 			</div>
 			<Suspense fallback={<RenderSkeleton />}>
-				<CardGrid manage query={query} />
+				<CardGrid manage studioPromise={myListings} />
 			</Suspense>
 		</section>
 	);

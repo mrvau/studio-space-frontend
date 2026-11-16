@@ -1,4 +1,6 @@
-import { IStudio, SuccessPromise } from "@/types";
+"use client";
+
+import { IStudio, APIPromise } from "@/types";
 import StudioCard from "../studio/studio-card";
 import {
 	Empty,
@@ -11,21 +13,16 @@ import {
 import { Building2 } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { use } from "react";
 
-const getStudios = async (query: string | null): SuccessPromise<IStudio[]> => {
-	const studioApiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`;
-	const response = await fetch(query ? `${studioApiUrl}${query}` : studioApiUrl);
-	return response.json();
-};
-
-const CardGrid = async ({
+const CardGrid = ({
+	studioPromise,
 	manage = false,
-	query = null,
 }: {
+	studioPromise: APIPromise<IStudio[]>;
 	manage?: boolean;
-	query?: string | null;
 }) => {
-	const { data: studios } = await getStudios(query);
+	const { data: studios } = use(studioPromise);
 
 	return (
 		<>

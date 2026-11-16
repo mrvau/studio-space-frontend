@@ -52,7 +52,7 @@ export interface IBooking {
 	specialRequest: string;
 }
 
-export type SuccessPromise<T> = Promise<{
+export type APIPromise<T> = Promise<{
 	success: boolean;
 	message: string;
 	data: T | [];
