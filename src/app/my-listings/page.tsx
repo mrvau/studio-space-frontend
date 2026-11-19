@@ -1,5 +1,3 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -7,6 +5,7 @@ import CardGrid from "@/components/shared/card-grid";
 import { IStudio, APIPromise } from "@/types";
 import { Suspense } from "react";
 import RenderSkeleton from "@/components/shared/render-skeleton";
+import { getTokenFromServer } from "@/lib/getToken";
 
 const getMyListings = async (token: string): APIPromise<IStudio[]> => {
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/listed`, {
@@ -19,11 +18,9 @@ const getMyListings = async (token: string): APIPromise<IStudio[]> => {
 };
 
 const MyListingsPage = async () => {
-	const { token } = await auth.api.getToken({
-		headers: await headers(),
-	});
+	const token = await getTokenFromServer();
 
-	if (!token) redirect("/login");
+	if (!token) redirect("/login?redirectFrom=my-listings");
 
 	const myListings = getMyListings(token);
 

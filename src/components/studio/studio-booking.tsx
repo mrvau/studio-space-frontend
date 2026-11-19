@@ -18,19 +18,11 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Session } from "@/lib/auth";
 import { User2Icon } from "lucide-react";
 import { toast } from "../ui/toast";
 import { Spinner } from "../ui/spinner";
-import { authClient } from "@/lib/auth-client";
 
-export default function StudioBooking({
-	studio,
-	session,
-}: {
-	studio: IStudio;
-	session: Session | null;
-}) {
+export default function StudioBooking({ studio, token }: { studio: IStudio; token: string }) {
 	const [open, setOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,16 +54,11 @@ export default function StudioBooking({
 	const handleBooking = async () => {
 		if (isSubmitting) return;
 
-		const user = session?.user;
-
 		const bookingData = {
 			studioId: studio._id,
 			studioTitle: studio.title,
 			hostId: studio.ownerId,
 			hostEmail: studio.ownerEmail,
-			userId: user?.id,
-			userName: user?.name,
-			userEmail: user?.email,
 			bookingDate: date,
 			startTime,
 			endTime,
@@ -86,8 +73,6 @@ export default function StudioBooking({
 
 		try {
 			setIsSubmitting(true);
-
-			const token = await authClient.token();
 
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/booking`, {
 				method: "POST",
@@ -134,7 +119,7 @@ export default function StudioBooking({
 				}>
 				{studio.availabilityStatus === "Available" ? "Book Workspace Now" : "Currently unavailable"}
 			</DialogTrigger>
-			{!session ? (
+			{!token ? (
 				<DialogContent showCloseButton={false}>
 					<DialogHeader className="items-center">
 						<div className="rounded-xl bg-muted p-2.5">

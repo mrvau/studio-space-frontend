@@ -22,7 +22,7 @@ import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { cn } from "cn";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getToken";
 // import Error from "next/error";
 
 const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: boolean }) => {
@@ -34,11 +34,9 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 		setIsDeleting(true);
 
 		try {
-			const { data } = await authClient.token();
+			const token = await getTokenFromClient();
 
-			const token = data?.token;
-
-			if (!token) throw new Error("User session expired.", { cause: "token" });
+			if (!token) throw new Error("Session expired.", { cause: "token" });
 
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${studio._id}`, {
 				method: "DELETE",

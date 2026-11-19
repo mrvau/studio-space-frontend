@@ -22,6 +22,7 @@ import { User } from "better-auth";
 import { useRouter } from "next/navigation";
 import { IStudio, StudioCategory } from "@/types";
 import { authClient } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getToken";
 
 const categories = [
 	{ label: "Select category", value: null },
@@ -89,11 +90,9 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 		try {
 			setIsSubmitting(true);
 
-			const { data } = await authClient.token();
+			const token = await getTokenFromClient();
 
-			const token = data?.token;
-
-			if (!token) throw new Error("User session expired.", { cause: "token" });
+			if (!token) throw new Error("Session expired.", { cause: "token" });
 
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`, {
 				method: "POST",
@@ -130,6 +129,12 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 		e.preventDefault();
 		if (isSubmitting || !studio) return;
 
+		const { data } = await authClient.token();
+
+		const token = data?.token;
+
+		if (!token) throw new Error("User session expired.", { cause: "token" });
+
 		const formData = new FormData(e.currentTarget);
 		const { _id, ...updateStudio } = studio;
 		const updatedStudio: Omit<IStudio, "_id"> = {
@@ -153,7 +158,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 			setIsSubmitting(true);
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${_id}`, {
 				method: "PUT",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
 				body: JSON.stringify(updatedStudio),
 			});
 			if (!response.ok) throw new Error("Unable to update studio.");

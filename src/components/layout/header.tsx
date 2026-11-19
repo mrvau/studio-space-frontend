@@ -26,13 +26,17 @@ const Header = () => {
 	}, []);
 
 	return (
-		<header className={cn(isScrolled ? "pt-0" : "pt-2", "sticky h-14 z-50 top-0 transition-all")}>
+		<header
+			className={cn(
+				isScrolled ? "pt-0" : "pt-2",
+				"sticky h-14 z-50 top-0 transition-all duration-500",
+			)}>
 			<div
 				className={cn(
-					isScrolled ? "max-w-full mx-auto border-b" : "container rounded border",
-					"backdrop-blur-lg shadow-sm shadow-primary border-accent transition-all duration-500",
+					isScrolled ? "max-w-full mx-auto rounded-none border-b" : "container rounded-full border",
+					"backdrop-blur-lg bg-foreground/30 dark:bg-transparent shadow-sm shadow-primary border-accent transition-all duration-500",
 				)}>
-				<div className="container px-4 py-2 text-primary-foreground">
+				<div className="container sm:px-2.5 py-2 text-primary-foreground">
 					<div className="flex items-center justify-between">
 						<div className="block md:hidden">
 							<SideNavBar />
@@ -42,7 +46,8 @@ const Header = () => {
 								<Aperture size={32} />
 							</div>
 							<span className="font-bold">
-								<span className="text-primary">Studio</span>Space
+								<span className="text-primary">Studio</span>
+								<span className="text-foreground">Space</span>
 							</span>
 						</Link>
 						<div className="hidden md:block">

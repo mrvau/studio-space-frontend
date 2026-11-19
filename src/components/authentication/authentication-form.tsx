@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
 	Field,
 	FieldDescription,
+	FieldError,
 	FieldGroup,
 	FieldLabel,
 	FieldSeparator,
@@ -28,6 +29,7 @@ type AuthenticationFormProps = React.ComponentProps<"div"> & {
 
 const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormProps) => {
 	const [showPassword, setShowPassword] = useState(false);
+	const [passwordError, setPasswordError] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
 	const isRegister = mode === "register";
@@ -39,6 +41,25 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 
 		const formData = new FormData(e.currentTarget);
 		const { name, email, password, image } = Object.fromEntries(formData.entries());
+		if (isRegister) {
+			const passwordValue = password as string;
+			if (passwordValue.length < 6) {
+				setPasswordError("Password must be at least 6 characters long.");
+				setIsSubmitting(false);
+				return;
+			}
+			if (!/[A-Z]/.test(passwordValue)) {
+				setPasswordError("Password must include an uppercase letter.");
+				setIsSubmitting(false);
+				return;
+			}
+			if (!/[a-z]/.test(passwordValue)) {
+				setPasswordError("Password must include a lowercase letter.");
+				setIsSubmitting(false);
+				return;
+			}
+			setPasswordError("");
+		}
 
 		try {
 			const { error } = isRegister
@@ -176,7 +197,9 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 										placeholder="Enter password"
 										autoComplete={isRegister ? "new-password" : "current-password"}
 										required
-										minLength={isRegister ? 8 : undefined}
+										aria-invalid={Boolean(passwordError)}
+										aria-describedby={passwordError ? "password-error" : undefined}
+										onChange={() => passwordError && setPasswordError("")}
 									/>
 									<InputGroupAddon align="inline-end">
 										<InputGroupButton
@@ -189,6 +212,11 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 										</InputGroupButton>
 									</InputGroupAddon>
 								</InputGroup>
+								{passwordError && (
+									<FieldError id="password-error" className="text-sm text-destructive" role="alert">
+										{passwordError}
+									</FieldError>
+								)}
 							</Field>
 							<Field>
 								<Button className="cursor-pointer" type="submit" disabled={isSubmitting}>
