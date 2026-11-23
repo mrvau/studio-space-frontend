@@ -5,30 +5,35 @@ import { Card, CardContent } from "../ui/card";
 const categories = [
 	{
 		name: "Photo Studios",
+		category: "Photo Studio",
 		description: "Spaces for portraits, campaigns, and creative shoots.",
 		icon: Camera,
 		accent: "bg-violet-500/10 text-violet-600 group-hover:bg-violet-500 group-hover:text-white",
 	},
 	{
 		name: "Film Stages",
+		category: "Film Stage",
 		description: "Production-ready stages for film and video crews.",
 		icon: Clapperboard,
 		accent: "bg-rose-500/10 text-rose-600 group-hover:bg-rose-500 group-hover:text-white",
 	},
 	{
 		name: "Podcast Rooms",
+		category: "Podcast Lounge",
 		description: "Record your next episode in a studio built for sound.",
 		icon: Mic2,
 		accent: "bg-sky-500/10 text-sky-600 group-hover:bg-sky-500 group-hover:text-white",
 	},
 	{
 		name: "Music Suites",
+		category: "Music Suite",
 		description: "Find a room to rehearse, produce, or record.",
 		icon: Music2,
 		accent: "bg-amber-500/10 text-amber-600 group-hover:bg-amber-500 group-hover:text-white",
 	},
 	{
 		name: "Workshops",
+		category: "Workshop",
 		description: "Hands-on spaces for making, teaching, and sharing.",
 		icon: Palette,
 		accent: "bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white",
@@ -47,10 +52,10 @@ const BrowseByCategories = () => (
 			</p>
 		</div>
 		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-			{categories.map(({ name, description, icon: Icon, accent }) => (
+			{categories.map(({ name, category, description, icon: Icon, accent }) => (
 				<Link
 					key={name}
-					href="/studios"
+					href={`/studios?category=${encodeURIComponent(category)}`}
 					className="group rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
 					<Card className="h-full gap-0 border-transparent bg-muted/40 py-0 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-border group-hover:bg-card group-hover:shadow-md">
 						<CardContent className="flex h-full min-h-52 flex-col p-5">

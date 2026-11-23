@@ -129,13 +129,13 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 		e.preventDefault();
 		if (isSubmitting || !studio) return;
 
+		const formData = new FormData(e.currentTarget);
 		const { data } = await authClient.token();
 
 		const token = data?.token;
 
 		if (!token) throw new Error("User session expired.", { cause: "token" });
 
-		const formData = new FormData(e.currentTarget);
 		const { _id, ...updateStudio } = studio;
 		const updatedStudio: Omit<IStudio, "_id"> = {
 			...updateStudio,
