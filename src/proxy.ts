@@ -7,8 +7,10 @@ export async function proxy(request: NextRequest) {
 		headers: await headers(),
 	});
 
+	const page = request.url.split("/").slice(3).join("/");
+
 	if (!session) {
-		return NextResponse.redirect(new URL("/login", request.url));
+		return NextResponse.redirect(new URL(`/login?redirectFrom=${page}`, request.url));
 	}
 
 	return NextResponse.next();

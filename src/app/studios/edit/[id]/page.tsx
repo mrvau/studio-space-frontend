@@ -18,10 +18,11 @@ async function getStudio(id: string): Promise<IStudio | null> {
 }
 
 export default async function EditStudioPage({ params }: PageProps<"/studios/edit/[id]">) {
-	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session?.user) redirect("/login");
-
 	const { id } = await params;
+
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session?.user) redirect(`/login?redirectFrom=studios/edit/${id}`);
+
 	const studio = await getStudio(id);
 	if (!studio) notFound();
 	if (studio.ownerId !== session.user.id) notFound();

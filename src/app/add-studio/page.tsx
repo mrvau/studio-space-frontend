@@ -8,7 +8,7 @@ import { headers } from "next/headers";
 export default async function AddStudioPage() {
 	const data = await auth.api.getSession({ headers: await headers() });
 
-	if (!data) redirect("/login");
+	if (!data) redirect("/login?redirectFrom=add-studio");
 
 	return (
 		<section className="container w-full py-10 sm:py-14">

@@ -19,7 +19,7 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { Eye, EyeOffIcon } from "lucide-react";
 import React, { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "../ui/toast";
 import { Spinner } from "../ui/spinner";
 
@@ -32,6 +32,12 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 	const [passwordError, setPasswordError] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const from = searchParams.get("redirectFrom");
+
+	const redirectTo = from ? `/${from}` : "/";
+
 	const isRegister = mode === "register";
 
 	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -73,7 +79,7 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 				: await authClient.signIn.email({
 						email: email as string,
 						password: password as string,
-						callbackURL: "/",
+						callbackURL: redirectTo,
 					});
 
 			if (error)
@@ -102,6 +108,7 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 		try {
 			const { error } = await authClient.signIn.social({
 				provider: "google",
+				callbackURL: redirectTo,
 			});
 
 			if (error)
