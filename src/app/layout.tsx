@@ -40,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 					enableSystem
 					disableTransitionOnChange>
 					<Header />
-					<main className="pt-10">{children}</main>
+					<main>{children}</main>
 					<Footer />
 					<Toaster />
 				</ThemeProvider>

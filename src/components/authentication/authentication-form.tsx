@@ -19,7 +19,7 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { Eye, EyeOffIcon } from "lucide-react";
 import React, { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "../ui/toast";
 import { Spinner } from "../ui/spinner";
 
@@ -31,7 +31,6 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 	const [showPassword, setShowPassword] = useState(false);
 	const [passwordError, setPasswordError] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const router = useRouter();
 	const searchParams = useSearchParams();
 
 	const from = searchParams.get("redirectFrom");
@@ -92,7 +91,6 @@ const AuthenticationForm = ({ mode, className, ...props }: AuthenticationFormPro
 				title: isRegister ? "Registration successful" : "Login successful",
 				description: isRegister ? "Please sign in to your account." : "Welcome back.",
 			});
-			router.replace(isRegister ? "/login" : "/");
 		} catch (error: unknown) {
 			toast.add({
 				type: "error",

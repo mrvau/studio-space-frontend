@@ -29,7 +29,7 @@ type TriggerElementProps = ComponentProps<"button"> & {
 };
 
 const BUTTONS = [
-	{ href: "/", name: "Home" },
+	{ href: "/", name: "Dashboard" },
 	{ href: "/add-studio", name: "Add New Studio" },
 	{ href: "/my-listings", name: "My Studio Listings" },
 	{ href: "/my-bookings", name: "My Bookings" },

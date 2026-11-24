@@ -38,12 +38,15 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 
 			if (!token) throw new Error("Session expired.", { cause: "token" });
 
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${studio._id}`, {
-				method: "DELETE",
-				headers: {
-					Authorization: `Bearer ${token}`,
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_BASE_URL}/studios/${studio._id}`,
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
 				},
-			});
+			);
 
 			if (!response.ok) throw new Error("Unable to delete studio.");
 
@@ -137,11 +140,13 @@ const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: bool
 					</div>
 				)}
 
-				<Link
-					href={`/studios/${studio._id}`}
-					className={buttonVariants({ className: manage ? "w-full" : "w-full" })}>
-					View Details
-				</Link>
+				{!manage && (
+					<Link
+						href={`/studios/${studio._id}`}
+						className={buttonVariants({ className: manage ? "w-full" : "w-full" })}>
+						View Details
+					</Link>
+				)}
 			</CardFooter>
 		</Card>
 	);

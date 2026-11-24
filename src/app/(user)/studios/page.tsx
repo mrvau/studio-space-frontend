@@ -20,7 +20,7 @@ const getAllStudios = async (category: string): APIPromise<IStudio[]> => {
 	const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 	const query = category !== "All Studios" ? `?${new URLSearchParams({ category })}` : "";
 
-	const response = await fetch(`${API_URL}/studio${query}`);
+	const response = await fetch(`${API_URL}/studios${query}`);
 
 	if (!response.ok) throw new Error("Failed to fetch studios");
 
@@ -69,7 +69,7 @@ const StudiosContent = () => {
 	};
 
 	return (
-		<section className="container w-full py-10 sm:py-14">
+		<>
 			<div className="flex flex-col sm:flex-row items-start sm:items-end justify-start sm:justify-between">
 				<div className="mb-4 sm:mb-8">
 					<p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
@@ -118,7 +118,7 @@ const StudiosContent = () => {
 					showEmptyAction={false}
 				/>
 			)}
-		</section>
+		</>
 	);
 };
 

@@ -4,7 +4,7 @@ import MyBookingsList from "@/components/booking/my-bookings-list";
 import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 const getMyBookings = async (token: string): APIPromise<IBooking[]> => {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/booking`, {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
@@ -38,9 +38,5 @@ export default async function MyBookingsPage() {
 		loadError = "Unable to load your bookings. Please try again later.";
 	}
 
-	return (
-		<section className="container w-full py-10 sm:py-14">
-			<MyBookingsList initialBookings={bookings} loadError={loadError} />
-		</section>
-	);
+	return <MyBookingsList initialBookings={bookings} loadError={loadError} />;
 }

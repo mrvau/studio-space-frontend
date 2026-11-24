@@ -2,7 +2,7 @@
 
 import { authClient } from "./auth-client";
 
-export const getTokenFromClient = async () => {
+export const getTokenFromClient = async (): Promise<string | null> => {
 	const { data, error } = await authClient.token();
 
 	if (error) {

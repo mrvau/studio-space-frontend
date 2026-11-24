@@ -21,7 +21,6 @@ import { toast } from "../ui/toast";
 import { User } from "better-auth";
 import { useRouter } from "next/navigation";
 import { IStudio, StudioCategory } from "@/types";
-import { authClient } from "@/lib/auth-client";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
 import { CATEGORIES } from "@/constants";
 
@@ -43,24 +42,24 @@ const amenities = [
 interface StudioFormProps {
 	user: User;
 	mode: "create" | "update";
-	studio?: IStudio;
+	previousStudio?: IStudio;
 }
 
-const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
+const StudioForm = ({ user, mode, previousStudio }: StudioFormProps) => {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const handleCreateStudio = async (e: SubmitEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (isSubmitting) return;
+		setIsSubmitting(true);
 
 		const formData = new FormData(e.currentTarget);
-		const gallery = String(formData.get("gallery") ?? "")
-			.split(/\r?\n/)
-			.map((url) => url.trim())
-			.filter(Boolean);
 
-		const studio: Omit<IStudio, "_id"> = {
+		const id = previousStudio?._id;
+
+		const studio: Omit<IStudio, "_id" | "ownerId" | "ownerEmail" | "ownerName"> = {
+			...(previousStudio ?? {}),
 			title: String(formData.get("title") ?? "").trim(),
 			category: String(formData.get("category")) as StudioCategory,
 			hourlyRate: Number(formData.get("hourlyRate")),
@@ -68,39 +67,44 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 			maxCapacity: Number(formData.get("maxCapacity")),
 			address: String(formData.get("address") ?? "").trim(),
 			imageURL: String(formData.get("imageURL") ?? "").trim(),
-			gallery,
+			gallery: String(formData.get("gallery") ?? "")
+				.split(/\r?\n/)
+				.map((url) => url.trim())
+				.filter(Boolean),
 			amenities: formData.getAll("amenities").map(String),
 			overview: String(formData.get("overview") ?? "").trim(),
-			ownerId: user.id,
-			ownerName: user.name,
-			ownerEmail: user.email,
 			availabilityStatus: "Available",
-			averageRating: +(Math.random() * 5.0).toFixed(1),
-			reviewCount: Math.floor(Math.random() * 50),
+			averageRating: previousStudio?.averageRating ?? Math.floor(Math.random() * 41 + 10) / 10,
+			reviewCount: previousStudio?.reviewCount ?? Math.floor(Math.random() * 50),
 		};
 
 		try {
-			setIsSubmitting(true);
-
 			const token = await getTokenFromClient();
 
 			if (!token) throw new Error("Session expired.", { cause: "token" });
 
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio`, {
-				method: "POST",
+			const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+			const url = mode === "create" ? `${API_URL}/studios` : `${API_URL}/studios/${id}`;
+
+			const options = {
+				method: mode === "create" ? "POST" : "PUT",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify(studio),
-			});
+			};
 
-			if (!response.ok) throw new Error("Unable to create new studio.");
+			const response = await fetch(url, options);
+
+			if (!response.ok)
+				throw new Error(`Unable to ${mode === "create" ? "create new" : "update"} studio.`);
 
 			toast.add({
 				type: "success",
-				title: "Successfully added new studio.",
-				description: "Visit My Listings to view newly added studio.",
+				title: `Successfully ${mode === "create" ? "added new" : "updated"} studio.`,
+				description: "Visit My Listings to view your studio.",
 			});
 			router.push("/my-listings");
 		} catch (error: unknown) {
@@ -117,65 +121,8 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 		}
 	};
 
-	const handleUpdateStudio = async (e: SubmitEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		if (isSubmitting || !studio) return;
-
-		const formData = new FormData(e.currentTarget);
-		const { data } = await authClient.token();
-
-		const token = data?.token;
-
-		if (!token) throw new Error("User session expired.", { cause: "token" });
-
-		const { _id, ...updateStudio } = studio;
-		const updatedStudio: Omit<IStudio, "_id"> = {
-			...updateStudio,
-			title: String(formData.get("title") ?? "").trim(),
-			category: String(formData.get("category")) as StudioCategory,
-			hourlyRate: Number(formData.get("hourlyRate")),
-			securityDeposit: Number(formData.get("securityDeposit")),
-			maxCapacity: Number(formData.get("maxCapacity")),
-			address: String(formData.get("address") ?? "").trim(),
-			imageURL: String(formData.get("imageURL") ?? "").trim(),
-			gallery: String(formData.get("gallery") ?? "")
-				.split(/\r?\n/)
-				.map((url) => url.trim())
-				.filter(Boolean),
-			amenities: formData.getAll("amenities").map(String),
-			overview: String(formData.get("overview") ?? "").trim(),
-		};
-
-		try {
-			setIsSubmitting(true);
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/${_id}`, {
-				method: "PUT",
-				headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-				body: JSON.stringify(updatedStudio),
-			});
-			if (!response.ok) throw new Error("Unable to update studio.");
-
-			toast.add({
-				type: "success",
-				title: "Studio updated",
-				description: "Your listing changes have been saved.",
-			});
-			router.push("/my-listings");
-		} catch (error: unknown) {
-			toast.add({
-				type: "error",
-				title: error instanceof Error ? error.message : "Something went wrong.",
-				description: "Please try again later.",
-			});
-		} finally {
-			setIsSubmitting(false);
-		}
-	};
-
 	return (
-		<form
-			onSubmit={mode === "create" ? handleCreateStudio : handleUpdateStudio}
-			className="space-y-6">
+		<form onSubmit={handleSubmit} className="space-y-6">
 			<FormSectionWrapper
 				icon={Building2}
 				title="Studio details"
@@ -187,7 +134,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 					<Input
 						id="title"
 						name="title"
-						defaultValue={studio?.title}
+						defaultValue={previousStudio?.title}
 						placeholder="e.g. The Daylight Loft"
 						required
 						maxLength={100}
@@ -198,7 +145,11 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 						<FieldLabel htmlFor="category">
 							Category <span className="text-destructive">*</span>
 						</FieldLabel>
-						<Select name="category" items={CATEGORIES} defaultValue={studio?.category} required>
+						<Select
+							name="category"
+							items={CATEGORIES}
+							defaultValue={previousStudio?.category}
+							required>
 							<SelectTrigger id="category">
 								<SelectValue />
 							</SelectTrigger>
@@ -220,7 +171,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 						<Input
 							id="capacity"
 							name="maxCapacity"
-							defaultValue={studio?.maxCapacity}
+							defaultValue={previousStudio?.maxCapacity}
 							type="number"
 							min="1"
 							step="1"
@@ -242,7 +193,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 					<Input
 						id="address"
 						name="address"
-						defaultValue={studio?.address}
+						defaultValue={previousStudio?.address}
 						autoComplete="street-address"
 						placeholder="Street, city, country"
 						required
@@ -261,7 +212,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 							<Input
 								id="hourlyRate"
 								name="hourlyRate"
-								defaultValue={studio?.hourlyRate}
+								defaultValue={previousStudio?.hourlyRate}
 								type="number"
 								min="0.01"
 								step="0.01"
@@ -282,7 +233,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 							<Input
 								id="securityDeposit"
 								name="securityDeposit"
-								defaultValue={studio?.securityDeposit}
+								defaultValue={previousStudio?.securityDeposit}
 								type="number"
 								min="0"
 								step="0.01"
@@ -306,7 +257,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 					<Input
 						id="imageURL"
 						name="imageURL"
-						defaultValue={studio?.imageURL}
+						defaultValue={previousStudio?.imageURL}
 						type="url"
 						placeholder="https://example.com/your-studio.jpg"
 						required
@@ -318,7 +269,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 						id="gallery"
 						name="gallery"
 						placeholder="Add one https:// image URL per line"
-						defaultValue={studio?.gallery?.join("\n")}
+						defaultValue={previousStudio?.gallery?.join("\n")}
 						rows={3}
 					/>
 					<FieldDescription>Optional. Enter one image URL per line.</FieldDescription>
@@ -332,7 +283,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 						name="overview"
 						placeholder="Describe the space, equipment, natural light, access, and what creators can make here..."
 						rows={6}
-						defaultValue={studio?.overview}
+						defaultValue={previousStudio?.overview}
 						required
 						minLength={30}
 						maxLength={2000}
@@ -354,7 +305,7 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 							id={`amenity-${index}`}
 							name="amenities"
 							value={amenity}
-							defaultChecked={studio?.amenities?.includes(amenity)}
+							defaultChecked={previousStudio?.amenities?.includes(amenity)}
 							className="cursor-pointer"
 						/>
 						<FieldLabel htmlFor={`amenity-${index}`} className="cursor-pointer">
@@ -404,8 +355,8 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 				<Button type="submit" size="lg" className={"cursor-pointer"} disabled={isSubmitting}>
 					{isSubmitting
 						? mode === "create"
-							? "Preparing…"
-							: "Saving…"
+							? "Creating..."
+							: "Saving Changes..."
 						: mode === "create"
 							? "Create studio"
 							: "Save changes"}

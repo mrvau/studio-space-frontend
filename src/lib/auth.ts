@@ -26,12 +26,12 @@ export const auth = betterAuth({
 			trustedProviders: ["google"],
 		},
 	},
-	plugins: [jwt()],
+	plugins: [jwt({ sessionCookieCache: true })],
 	session: {
 		cookieCache: {
 			enabled: true,
 			strategy: "jwt",
-			maxAge: 3 * 24 * 60 * 60,
+			maxAge: 1 * 24 * 60 * 60,
 		},
 	},
 });

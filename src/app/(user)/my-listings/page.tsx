@@ -8,7 +8,7 @@ import RenderSkeleton from "@/components/shared/render-skeleton";
 import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 const getMyListings = async (token: string): APIPromise<IStudio[]> => {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/listed`, {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studios/listed`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
@@ -25,7 +25,7 @@ const MyListingsPage = async () => {
 	const myListings = getMyListings(token);
 
 	return (
-		<section className="container w-full py-10 sm:py-14">
+		<>
 			<div className="mb-8 flex flex-wrap items-end justify-between gap-4">
 				<div>
 					<p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
@@ -41,7 +41,7 @@ const MyListingsPage = async () => {
 			<Suspense fallback={<RenderSkeleton />}>
 				<CardGrid manage studioPromise={myListings} />
 			</Suspense>
-		</section>
+		</>
 	);
 };
 

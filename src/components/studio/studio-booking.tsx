@@ -21,8 +21,16 @@ import {
 import { User2Icon } from "lucide-react";
 import { toast } from "../ui/toast";
 import { Spinner } from "../ui/spinner";
+import { Session } from "@/lib/auth";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
-export default function StudioBooking({ studio, token }: { studio: IStudio; token: string }) {
+export default function StudioBooking({
+	studio,
+	session,
+}: {
+	studio: IStudio;
+	session: Session | null;
+}) {
 	const [open, setOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,6 +61,7 @@ export default function StudioBooking({ studio, token }: { studio: IStudio; toke
 
 	const handleBooking = async () => {
 		if (isSubmitting) return;
+		setIsSubmitting(true);
 
 		const bookingData = {
 			studioId: studio._id,
@@ -72,9 +81,13 @@ export default function StudioBooking({ studio, token }: { studio: IStudio; toke
 		};
 
 		try {
-			setIsSubmitting(true);
+			const token = await getTokenFromClient();
 
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/booking`, {
+			if (!token) {
+				throw new Error("Session Expired!", { cause: "token" });
+			}
+
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -119,7 +132,7 @@ export default function StudioBooking({ studio, token }: { studio: IStudio; toke
 				}>
 				{studio.availabilityStatus === "Available" ? "Book Workspace Now" : "Currently unavailable"}
 			</DialogTrigger>
-			{!token ? (
+			{!session ? (
 				<DialogContent showCloseButton={false}>
 					<DialogHeader className="items-center">
 						<div className="rounded-xl bg-muted p-2.5">
@@ -130,7 +143,10 @@ export default function StudioBooking({ studio, token }: { studio: IStudio; toke
 							Please log in to your account before booking a studio.
 						</DialogDescription>
 					</DialogHeader>
-					<Button nativeButton={false} render={<Link href="/login" />} className="w-full">
+					<Button
+						nativeButton={false}
+						render={<Link href={`/login?redirectFrom=studios/${studio._id}`} />}
+						className="w-full">
 						Go to Login
 					</Button>
 				</DialogContent>

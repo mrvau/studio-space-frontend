@@ -5,7 +5,7 @@ import CardGrid from "../shared/card-grid";
 import { IStudio, APIPromise } from "@/types";
 
 const getFeaturedStudios = async (): APIPromise<IStudio[]> => {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/featured`);
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studios/featured`);
 	return response.json();
 };
 
