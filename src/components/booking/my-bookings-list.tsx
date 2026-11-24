@@ -18,7 +18,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
-import { getTokenFromClient } from "@/lib/getToken";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const statusStyles: Record<BookingStatus, string> = {
 	Pending: "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300",
@@ -201,6 +201,7 @@ export default function MyBookingsList({
 									<Button
 										variant="destructive"
 										size="sm"
+										className="cursor-pointer"
 										onClick={() => void cancelBooking(booking)}
 										disabled={cancellingId !== null}>
 										{cancellingId === booking._id && <Spinner />}

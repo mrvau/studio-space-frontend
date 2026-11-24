@@ -24,7 +24,7 @@ const steps = [
 ];
 
 const HowBookingWorks = () => (
-	<section id="how-it-works" className="bg-muted/40 py-16">
+	<section id="how-it-works" className="bg-muted/40 py-16 scroll-mt-10">
 		<div className="container">
 			<div className="mb-12 flex flex-col items-center gap-2 text-center">
 				<p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">

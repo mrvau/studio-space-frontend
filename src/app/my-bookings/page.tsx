@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import type { APIPromise, IBooking } from "@/types";
 import MyBookingsList from "@/components/booking/my-bookings-list";
-import { getTokenFromServer } from "@/lib/getToken";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 const getMyBookings = async (token: string): APIPromise<IBooking[]> => {
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/booking`, {

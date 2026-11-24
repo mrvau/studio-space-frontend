@@ -4,7 +4,7 @@ import { ArrowLeft, BadgeCheck, MapPin, Star, Users, Wallet } from "lucide-react
 import type { IStudio } from "@/types";
 import StudioBooking from "@/components/studio/studio-booking";
 import StudioGallery from "@/components/studio/studio-gallery";
-import { getTokenFromServer } from "@/lib/getToken";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 async function getStudio(id: string): Promise<IStudio | null> {
 	try {

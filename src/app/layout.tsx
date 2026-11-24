@@ -31,6 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html
 			lang="en"
+			data-scroll-behavior="smooth"
 			className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} h-full antialiased`}>
 			<body className="min-h-full flex flex-col">
 				<ThemeProvider
@@ -39,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 					enableSystem
 					disableTransitionOnChange>
 					<Header />
-					<main>{children}</main>
+					<main className="pt-10">{children}</main>
 					<Footer />
 					<Toaster />
 				</ThemeProvider>

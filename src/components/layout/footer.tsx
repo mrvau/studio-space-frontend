@@ -1,20 +1,13 @@
 import Link from "next/link";
 import { Aperture, ArrowRight } from "lucide-react";
 import { Separator } from "../ui/separator";
+import { CATEGORIES } from "@/constants";
 
 const quickLinks = [
 	{ label: "Home", href: "/" },
 	{ label: "Explore Studios", href: "/studios" },
 	{ label: "How It Works", href: "/#how-it-works" },
 	{ label: "About Us", href: "/#about-us" },
-];
-
-const studioCategories = [
-	"Photo Studios",
-	"Sound Stages",
-	"Podcast Rooms",
-	"Music Suites",
-	"Art Workshops",
 ];
 
 const Footer = () => (
@@ -119,12 +112,12 @@ const Footer = () => (
 			<nav aria-label="Popular studio categories">
 				<h2 className="mb-4 text-sm font-semibold">Popular Categories</h2>
 				<ul className="space-y-3">
-					{studioCategories.map((category) => (
-						<li key={category}>
+					{CATEGORIES.map((category) => (
+						<li key={category.value}>
 							<Link
-								href="/studios"
+								href={`/studios?category=${encodeURIComponent(category.value)}`}
 								className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-								{category}
+								{category.label}s
 							</Link>
 						</li>
 					))}

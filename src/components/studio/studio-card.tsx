@@ -22,7 +22,7 @@ import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { cn } from "cn";
 import { useRouter } from "next/navigation";
-import { getTokenFromClient } from "@/lib/getToken";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 // import Error from "next/error";
 
 const StudioCard = ({ studio, manage = false }: { studio: IStudio; manage?: boolean }) => {

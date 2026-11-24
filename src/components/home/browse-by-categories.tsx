@@ -18,7 +18,7 @@ const categories = [
 		accent: "bg-rose-500/10 text-rose-600 group-hover:bg-rose-500 group-hover:text-white",
 	},
 	{
-		name: "Podcast Rooms",
+		name: "Podcast Lounges",
 		category: "Podcast Lounge",
 		description: "Record your next episode in a studio built for sound.",
 		icon: Mic2,

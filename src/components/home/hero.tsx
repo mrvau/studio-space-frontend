@@ -26,31 +26,29 @@ const STUDIOS = [
 
 const HeroSection = () => {
 	return (
-		<section className="flex flex-col items-center justify-center w-full h-[70vh] sm:h-[45vh] lg:h-[70vh]">
-			<div className="absolute top-0 w-full h-full -z-30">
-				<Carousel
-					plugins={[Autoplay({ delay: 4000 })]}
-					opts={{ loop: true }}
-					className="w-full h-full">
-					<CarouselContent className="h-[75vh] sm:h-[50vh] lg:h-[75vh]">
-						{STUDIOS.map((studio) => (
-							<CarouselItem key={studio.id} className="h-full">
-								<div className="relative h-full w-full">
-									<Image
-										src={studio.src}
-										alt={studio.alt}
-										className="object-cover brightness-20"
-										fill
-										preload={true}
-										sizes="100vw"
-									/>
-								</div>
-							</CarouselItem>
-						))}
-					</CarouselContent>
-				</Carousel>
-			</div>
-			<div className="relative -top-20 flex flex-col items-center justify-center gap-6 text-center px-4">
+		<section className="flex flex-col items-center justify-center w-full h-100 lg:h-114">
+			<Carousel
+				plugins={[Autoplay({ delay: 4000 })]}
+				opts={{ loop: true }}
+				className="absolute top-0 -z-30 w-full">
+				<CarouselContent className="w-full h-100 lg:h-114 ml-0">
+					{STUDIOS.map((studio) => (
+						<CarouselItem key={studio.id} className="h-full pl-0">
+							<div className="relative h-full w-full">
+								<Image
+									src={studio.src}
+									alt={studio.alt}
+									className="object-cover brightness-20"
+									fill
+									preload={true}
+									sizes="100vw"
+								/>
+							</div>
+						</CarouselItem>
+					))}
+				</CarouselContent>
+			</Carousel>
+			<div className="flex flex-col items-center justify-center gap-6 text-center px-4 mt-4">
 				<div className="flex flex-col items-center gap-2">
 					<h1 className="text-3xl sm:text-4xl leading-8 md:leading-10 lg:leading-14 font-bold text-primary-foreground">
 						Find Your Space.

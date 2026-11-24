@@ -29,11 +29,11 @@ const Header = () => {
 		<header
 			className={cn(
 				isScrolled ? "pt-0" : "pt-2",
-				"sticky h-14 z-50 top-0 transition-all duration-500",
+				"fixed w-full h-14 z-50 top-0 transition-all duration-500",
 			)}>
 			<div
 				className={cn(
-					isScrolled ? "max-w-full mx-auto rounded-none border-b" : "container rounded-full border",
+					isScrolled ? "max-w-full mx-auto rounded-none border-b" : "container rounded-4xl border",
 					"backdrop-blur-lg bg-foreground/30 dark:bg-transparent shadow-sm shadow-primary border-accent transition-all duration-500",
 				)}>
 				<div className="container sm:px-2.5 py-2 text-primary-foreground">
@@ -47,7 +47,9 @@ const Header = () => {
 							</div>
 							<span className="font-bold">
 								<span className="text-primary">Studio</span>
-								<span className="text-foreground">Space</span>
+								<span className="text-white text-shadow-sm text-shadow-foreground dark:text-shadow-none">
+									Space
+								</span>
 							</span>
 						</Link>
 						<div className="hidden md:block">

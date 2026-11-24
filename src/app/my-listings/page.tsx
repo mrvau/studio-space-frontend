@@ -5,7 +5,7 @@ import CardGrid from "@/components/shared/card-grid";
 import { IStudio, APIPromise } from "@/types";
 import { Suspense } from "react";
 import RenderSkeleton from "@/components/shared/render-skeleton";
-import { getTokenFromServer } from "@/lib/getToken";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 const getMyListings = async (token: string): APIPromise<IStudio[]> => {
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/studio/listed`, {

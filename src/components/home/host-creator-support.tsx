@@ -25,7 +25,7 @@ const assurances = [
 ];
 
 const HostCreatorSupport = () => (
-	<section id="about-us" className="py-16">
+	<section id="about-us" className="py-16 scroll-mt-10">
 		<div className="container">
 			<div className="mb-10 text-center">
 				<p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">

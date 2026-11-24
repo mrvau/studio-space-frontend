@@ -22,16 +22,8 @@ import { User } from "better-auth";
 import { useRouter } from "next/navigation";
 import { IStudio, StudioCategory } from "@/types";
 import { authClient } from "@/lib/auth-client";
-import { getTokenFromClient } from "@/lib/getToken";
-
-const categories = [
-	{ label: "Select category", value: null },
-	{ label: "Photo Studio", value: "Photo Studio" },
-	{ label: "Film Stage", value: "Film Stage" },
-	{ label: "Podcast Lounge", value: "Podcast Lounge" },
-	{ label: "Music Suite", value: "Music Suite" },
-	{ label: "Workshop", value: "Workshop" },
-];
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { CATEGORIES } from "@/constants";
 
 const amenities = [
 	"Natural light",
@@ -206,13 +198,13 @@ const StudioForm = ({ user, mode, studio }: StudioFormProps) => {
 						<FieldLabel htmlFor="category">
 							Category <span className="text-destructive">*</span>
 						</FieldLabel>
-						<Select name="category" items={categories} defaultValue={studio?.category} required>
+						<Select name="category" items={CATEGORIES} defaultValue={studio?.category} required>
 							<SelectTrigger id="category">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
 								<SelectGroup>
-									{categories.map((category) => (
+									{CATEGORIES.map((category) => (
 										<SelectItem key={category.value} value={category.value}>
 											{category.label}
 										</SelectItem>
