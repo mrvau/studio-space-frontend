@@ -21,10 +21,13 @@ export default async function EditStudioPage({ params }: PageProps<"/studios/edi
 	const { id } = await params;
 
 	const session = await auth.api.getSession({ headers: await headers() });
+
 	if (!session?.user) redirect(`/login?redirectFrom=studios/edit/${id}`);
 
 	const studio = await getStudio(id);
+
 	if (!studio) notFound();
+
 	if (studio.ownerId !== session.user.id) notFound();
 
 	return (

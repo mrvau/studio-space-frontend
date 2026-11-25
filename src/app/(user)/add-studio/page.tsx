@@ -34,7 +34,7 @@ export default async function AddStudioPage() {
 				</div>
 			</div>
 
-			<StudioForm user={data?.user} mode="create" />
+			<StudioForm user={data.user} mode="create" />
 		</div>
 	);
 }

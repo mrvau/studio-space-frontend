@@ -24,19 +24,20 @@ import { Spinner } from "../ui/spinner";
 import { Session } from "@/lib/auth";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
-export default function StudioBooking({
-	studio,
-	session,
-}: {
+interface StudioBookingProps {
 	studio: IStudio;
 	session: Session | null;
-}) {
+}
+
+export default function StudioBooking({ studio, session }: StudioBookingProps) {
 	const [open, setOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const [date, setDate] = useState("");
-	const [startTime, setStartTime] = useState("");
-	const [endTime, setEndTime] = useState("");
+	const [date, setDate] = useState(
+		new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dhaka" }),
+	);
+	const [startTime, setStartTime] = useState("09:00");
+	const [endTime, setEndTime] = useState("20:00");
 	const [request, setRequest] = useState("");
 
 	const durationHours = useMemo(() => {
@@ -75,8 +76,6 @@ export default function StudioBooking({
 			hourlyRate: studio.hourlyRate,
 			securityDeposit: studio.securityDeposit,
 			totalPrice: estimatedTotal,
-			status: "Pending",
-			paymentStatus: "Pending",
 			specialRequest: request,
 		};
 
@@ -182,7 +181,13 @@ export default function StudioBooking({
 									type="date"
 									min={today}
 									value={date}
-									onChange={(event) => setDate(event.target.value)}
+									onChange={(event) =>
+										setDate(
+											new Date(event.target.value).toLocaleDateString("en-CA", {
+												timeZone: "Asia/Dhaka",
+											}),
+										)
+									}
 									className="h-11 bg-background px-3"
 								/>
 							</Field>
@@ -194,6 +199,8 @@ export default function StudioBooking({
 									<Input
 										id="booking-start-time"
 										type="time"
+										step={3600}
+										min={"09:00"}
 										value={startTime}
 										onChange={(event) => setStartTime(event.target.value)}
 										className="h-11 bg-background px-3"
@@ -206,6 +213,8 @@ export default function StudioBooking({
 									<Input
 										id="booking-end-time"
 										type="time"
+										step={3600}
+										min={"10:00"}
 										value={endTime}
 										onChange={(event) => setEndTime(event.target.value)}
 										className="h-11 bg-background px-3"

@@ -9,7 +9,7 @@ export type StudioAvailability = "Available" | "Unavailable";
 
 export type BookingStatus = "Completed" | "Cancelled" | "Confirmed" | "Pending";
 
-export type PaymentStatus = "Paid" | "Unpaid" | "Refunded";
+export type PaymentStatus = "Paid" | "Pending" | "Refunded";
 
 export interface IStudio {
 	_id: string;

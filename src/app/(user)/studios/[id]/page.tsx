@@ -135,7 +135,7 @@ export default async function StudioDetailsPage({ params }: PageProps<"/studios/
 						</p>
 					</section>
 				</div>
-				<aside className="h-fit rounded-2xl border bg-card p-6 shadow-sm lg:sticky lg:top-6">
+				<aside className="h-fit rounded-2xl border bg-card p-6 shadow-sm lg:sticky lg:top-20">
 					<p className="text-2xl font-bold">
 						${studio.hourlyRate}
 						<span className="text-base font-normal text-muted-foreground"> / hour</span>
